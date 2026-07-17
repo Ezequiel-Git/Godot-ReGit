@@ -1,0 +1,373 @@
+[gd_scene load_steps=2 format=3 uid="uid://cx6e7v8m9q0w1"]
+
+[ext_resource type="Script" path="res://addons/gd_git_cli/git_dock.gd" id="1_a2b3c"]
+
+[node name="GitDock" type="MarginContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+script = ExtResource("1_a2b3c")
+
+[node name="GitHubRequest" type="HTTPRequest" parent="."]
+
+[node name="CenterWrapper" type="CenterContainer" parent="."]
+layout_mode = 2
+
+[node name="AuthView" type="PanelContainer" parent="CenterWrapper"]
+visible = false
+custom_minimum_size = Vector2(550, 0)
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="CenterWrapper/AuthView"]
+layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="VBox" type="VBoxContainer" parent="CenterWrapper/AuthView/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Title" type="Label" parent="CenterWrapper/AuthView/Margin/VBox"]
+layout_mode = 2
+theme_type_variation = &"HeaderLarge"
+text = "Autenticação GitHub"
+horizontal_alignment = 1
+
+[node name="InitButton" type="Button" parent="CenterWrapper/AuthView/Margin/VBox"]
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+text = "1. Inicializar Repositório Local (git init)"
+
+[node name="RemoteLabel" type="Label" parent="CenterWrapper/AuthView/Margin/VBox"]
+layout_mode = 2
+text = "2. Conectar à Nuvem (Requer GitHub PAT):"
+
+[node name="TokenBox" type="HBoxContainer" parent="CenterWrapper/AuthView/Margin/VBox"]
+layout_mode = 2
+
+[node name="GitHubToken" type="LineEdit" parent="CenterWrapper/AuthView/Margin/VBox/TokenBox"]
+custom_minimum_size = Vector2(0, 35)
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Cole o seu Personal Access Token (ghp_...)"
+secret = true
+
+[node name="FetchButton" type="Button" parent="CenterWrapper/AuthView/Margin/VBox/TokenBox"]
+custom_minimum_size = Vector2(100, 35)
+layout_mode = 2
+text = "Buscar Repositórios"
+
+[node name="TokenHelpLabel" type="RichTextLabel" parent="CenterWrapper/AuthView/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/default_color = Color(0.666667, 0.666667, 0.666667, 1)
+bbcode_enabled = true
+text = "[i]Gerar PAT: GitHub > Settings > Developer settings > Tokens (classic). Marque 'repo' e 'delete_repo'.[/i]"
+fit_content = true
+
+[node name="LoadingLabel" type="Label" parent="CenterWrapper/AuthView/Margin/VBox"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.666667, 0.666667, 0.666667, 1)
+text = "Carregando..."
+horizontal_alignment = 1
+
+[node name="ReposView" type="PanelContainer" parent="CenterWrapper"]
+visible = false
+custom_minimum_size = Vector2(550, 0)
+layout_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="CenterWrapper/ReposView"]
+layout_mode = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="VBox" type="VBoxContainer" parent="CenterWrapper/ReposView/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Header" type="HBoxContainer" parent="CenterWrapper/ReposView/Margin/VBox"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="CenterWrapper/ReposView/Margin/VBox/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"HeaderLarge"
+text = "Gerenciar Repositórios"
+
+[node name="DisconnectTokenButton" type="Button" parent="CenterWrapper/ReposView/Margin/VBox/Header"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.3, 0.3, 1)
+text = "🔌 Sair da Conta"
+
+[node name="SelectLabel" type="Label" parent="CenterWrapper/ReposView/Margin/VBox"]
+layout_mode = 2
+text = "Meus Repositórios na Nuvem:"
+
+[node name="SelectBox" type="HBoxContainer" parent="CenterWrapper/ReposView/Margin/VBox"]
+layout_mode = 2
+
+[node name="RepoSelect" type="OptionButton" parent="CenterWrapper/ReposView/Margin/VBox/SelectBox"]
+custom_minimum_size = Vector2(0, 35)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ConnectButton" type="Button" parent="CenterWrapper/ReposView/Margin/VBox/SelectBox"]
+custom_minimum_size = Vector2(100, 35)
+layout_mode = 2
+text = "Conectar"
+
+[node name="DeleteRepoButton" type="Button" parent="CenterWrapper/ReposView/Margin/VBox/SelectBox"]
+custom_minimum_size = Vector2(40, 35)
+layout_mode = 2
+tooltip_text = "Deletar repositório da nuvem"
+text = "🗑️"
+
+[node name="Sep" type="HSeparator" parent="CenterWrapper/ReposView/Margin/VBox"]
+layout_mode = 2
+
+[node name="CreateLabel" type="Label" parent="CenterWrapper/ReposView/Margin/VBox"]
+layout_mode = 2
+text = "Ou Criar um Novo no GitHub:"
+
+[node name="CreateBox" type="HBoxContainer" parent="CenterWrapper/ReposView/Margin/VBox"]
+layout_mode = 2
+
+[node name="NewGitHubRepoName" type="LineEdit" parent="CenterWrapper/ReposView/Margin/VBox/CreateBox"]
+custom_minimum_size = Vector2(0, 35)
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "nome-do-jogo"
+
+[node name="CreateGitHubRepoButton" type="Button" parent="CenterWrapper/ReposView/Margin/VBox/CreateBox"]
+custom_minimum_size = Vector2(100, 35)
+layout_mode = 2
+text = "+ Criar Nuvem"
+
+[node name="WorkspaceView" type="ScrollContainer" parent="."]
+visible = false
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="MainContainer" type="VBoxContainer" parent="WorkspaceView"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 12
+
+[node name="RepoHeader" type="HBoxContainer" parent="WorkspaceView/MainContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="RemoteInfoLabel" type="Label" parent="WorkspaceView/MainContainer/RepoHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.5, 0.5, 0.5, 1)
+text = "Remote: "
+clip_text = true
+text_overrun_behavior = 3
+
+[node name="BackButton" type="Button" parent="WorkspaceView/MainContainer/RepoHeader"]
+layout_mode = 2
+text = "⬅️ Voltar"
+
+[node name="BranchHeader" type="HBoxContainer" parent="WorkspaceView/MainContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="BranchLabel" type="Label" parent="WorkspaceView/MainContainer/BranchHeader"]
+layout_mode = 2
+text = "Branch Atual:"
+
+[node name="BranchSelect" type="OptionButton" parent="WorkspaceView/MainContainer/BranchHeader"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+
+[node name="DeleteBranchButton" type="MenuButton" parent="WorkspaceView/MainContainer/BranchHeader"]
+layout_mode = 2
+text = "🗑️"
+tooltip_text = "Apagar branch selecionada"
+
+[node name="VSeparator" type="VSeparator" parent="WorkspaceView/MainContainer/BranchHeader"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="NewBranchName" type="LineEdit" parent="WorkspaceView/MainContainer/BranchHeader"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "nova-branch"
+
+[node name="CreateBranchButton" type="Button" parent="WorkspaceView/MainContainer/BranchHeader"]
+layout_mode = 2
+text = "+ Criar Branch"
+
+[node name="SplitLayout" type="HSplitContainer" parent="WorkspaceView/MainContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+split_offset = 400
+
+[node name="LeftPanelCard" type="PanelContainer" parent="WorkspaceView/MainContainer/SplitLayout"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Margin" type="MarginContainer" parent="WorkspaceView/MainContainer/SplitLayout/LeftPanelCard"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="LeftPanel" type="VBoxContainer" parent="WorkspaceView/MainContainer/SplitLayout/LeftPanelCard/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="StatusHeader" type="HBoxContainer" parent="WorkspaceView/MainContainer/SplitLayout/LeftPanelCard/Margin/LeftPanel"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="WorkspaceView/MainContainer/SplitLayout/LeftPanelCard/Margin/LeftPanel/StatusHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"HeaderMedium"
+text = "Arquivos Modificados"
+
+[node name="StatusButton" type="Button" parent="WorkspaceView/MainContainer/SplitLayout/LeftPanelCard/Margin/LeftPanel/StatusHeader"]
+layout_mode = 2
+text = " 🔄 Atualizar "
+
+[node name="StatusList" type="ItemList" parent="WorkspaceView/MainContainer/SplitLayout/LeftPanelCard/Margin/LeftPanel"]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="DiscardButton" type="Button" parent="WorkspaceView/MainContainer/SplitLayout/LeftPanelCard/Margin/LeftPanel"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.4, 0.4, 1)
+text = "⏪ Reverter Selecionado"
+tooltip_text = "Desfazer todas as alterações do arquivo selecionado"
+
+[node name="RightPanelCard" type="PanelContainer" parent="WorkspaceView/MainContainer/SplitLayout"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Margin" type="MarginContainer" parent="WorkspaceView/MainContainer/SplitLayout/RightPanelCard"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="RightPanel" type="VBoxContainer" parent="WorkspaceView/MainContainer/SplitLayout/RightPanelCard/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="CommitHeader" type="Label" parent="WorkspaceView/MainContainer/SplitLayout/RightPanelCard/Margin/RightPanel"]
+layout_mode = 2
+theme_type_variation = &"HeaderMedium"
+text = "Commit"
+
+[node name="CommitMessage" type="TextEdit" parent="WorkspaceView/MainContainer/SplitLayout/RightPanelCard/Margin/RightPanel"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+placeholder_text = "Mensagem do commit (obrigatória)..."
+wrap_mode = 1
+
+[node name="CommitButton" type="Button" parent="WorkspaceView/MainContainer/SplitLayout/RightPanelCard/Margin/RightPanel"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.9, 0.9, 0.9, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+text = "📝 Fazer Commit (Auto-Stage)"
+
+[node name="HSeparator" type="HSeparator" parent="WorkspaceView/MainContainer/SplitLayout/RightPanelCard/Margin/RightPanel"]
+layout_mode = 2
+
+[node name="SyncHeader" type="Label" parent="WorkspaceView/MainContainer/SplitLayout/RightPanelCard/Margin/RightPanel"]
+layout_mode = 2
+theme_type_variation = &"HeaderSmall"
+text = "Sincronização"
+horizontal_alignment = 1
+
+[node name="ActionButtons" type="HBoxContainer" parent="WorkspaceView/MainContainer/SplitLayout/RightPanelCard/Margin/RightPanel"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 16
+
+[node name="PullButton" type="Button" parent="WorkspaceView/MainContainer/SplitLayout/RightPanelCard/Margin/RightPanel/ActionButtons"]
+custom_minimum_size = Vector2(140, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "📥 Pull"
+
+[node name="PushButton" type="Button" parent="WorkspaceView/MainContainer/SplitLayout/RightPanelCard/Margin/RightPanel/ActionButtons"]
+custom_minimum_size = Vector2(140, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "🚀 Push"
+
+[node name="ConsoleHeader" type="HBoxContainer" parent="WorkspaceView/MainContainer/SplitLayout/RightPanelCard/Margin/RightPanel"]
+layout_mode = 2
+
+[node name="ConsoleLabel" type="Label" parent="WorkspaceView/MainContainer/SplitLayout/RightPanelCard/Margin/RightPanel/ConsoleHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Terminal Log:"
+
+[node name="HistoryButton" type="Button" parent="WorkspaceView/MainContainer/SplitLayout/RightPanelCard/Margin/RightPanel/ConsoleHeader"]
+layout_mode = 2
+text = "📖 Ver Histórico"
+
+[node name="OutputConsole" type="CodeEdit" parent="WorkspaceView/MainContainer/SplitLayout/RightPanelCard/Margin/RightPanel"]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/background_color = Color(0.121569, 0.121569, 0.121569, 1)
+theme_override_colors/font_readonly_color = Color(0.784314, 0.784314, 0.784314, 1)
+editable = false
+wrap_mode = 1
+
+[node name="ErrorView" type="CenterContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="ErrorView"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="ErrorIcon" type="Label" parent="ErrorView/VBox"]
+layout_mode = 2
+theme_type_variation = &"HeaderLarge"
+text = "⚠️"
+horizontal_alignment = 1
+
+[node name="ErrorTitle" type="Label" parent="ErrorView/VBox"]
+layout_mode = 2
+theme_type_variation = &"HeaderLarge"
+text = "Git Não Encontrado"
+horizontal_alignment = 1
+
+[node name="ErrorDesc" type="Label" parent="ErrorView/VBox"]
+layout_mode = 2
+text = "Para usar este plugin, você precisa ter o Git instalado no seu sistema."
+horizontal_alignment = 1
+
+[node name="ErrorLink" type="LinkButton" parent="ErrorView/VBox"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Baixar Git (https://git-scm.com/)"
+uri = "https://git-scm.com/"
