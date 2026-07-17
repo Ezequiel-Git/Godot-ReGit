@@ -4,7 +4,7 @@
   <p><b>A Máquina Perfeita de Controle de Versão (Git) para Godot 4</b></p>
 </div>
 
-O **Godot ReGit** é um plugin definitivo de Git construído do zero para se integrar perfeitamente à interface e ao ecossistema da Godot 4. Pare de alternar entre o editor e o terminal. Tenha o poder completo do versionamento de código no seu painel inferior, com a elegância nativa que o seu projeto merece.
+O **Godot ReGit** é um plugin definitivo de Git construído do zero para se integrar perfeitamente à interface e ao ecossistema da Godot 4, inspirado no plugin oficial **Godot github**. Pare de alternar entre o editor e o terminal. Tenha o poder completo do versionamento de código no seu painel inferior, com a elegância nativa que o seu projeto merece.
 
 ---
 
