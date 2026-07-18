@@ -23,6 +23,9 @@ func _ready():
 		else:
 			close_button.text = "❌ Close Diff"
 		close_button.pressed.connect(func(): close_requested.emit())
+		
+	if Engine.is_editor_hint() and diff_text:
+		diff_text.add_theme_font_override("normal_font", get_theme_font("source", "EditorFonts"))
 
 func set_diff(file_path: String, bbcode: String):
 	if title_label:

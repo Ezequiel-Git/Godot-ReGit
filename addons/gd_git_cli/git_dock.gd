@@ -684,13 +684,53 @@ func _on_pull_pressed():
 func _fix_utf8(text: String) -> String:
 	var bytes = PackedByteArray()
 	for i in range(text.length()):
-		var c = text.unicode_at(i)
-		# Se o caractere for além do Latin-1 padrão, pegamos apenas os 8 bits originais
-		bytes.append(c & 0xFF)
-	var fixed = bytes.get_string_from_utf8()
-	if fixed.is_empty() and not text.is_empty():
-		return text # Retorna original se falhar o decode
-	return fixed
+		bytes.append(text.unicode_at(i) & 0xFF)
+	
+	var result = ""
+	var idx = 0
+	var total = bytes.size()
+	while idx < total:
+		var b1 = bytes[idx]
+		idx += 1
+		if b1 < 0x80:
+			result += char(b1)
+		elif (b1 & 0xE0) == 0xC0:
+			if idx < total:
+				var b2 = bytes[idx]
+				idx += 1
+				if (b2 & 0xC0) == 0x80:
+					result += char(((b1 & 0x1F) << 6) | (b2 & 0x3F))
+				else:
+					result += char(b1) + char(b2)
+			else:
+				result += char(b1)
+		elif (b1 & 0xF0) == 0xE0:
+			if idx + 1 < total:
+				var b2 = bytes[idx]
+				var b3 = bytes[idx+1]
+				idx += 2
+				if (b2 & 0xC0) == 0x80 and (b3 & 0xC0) == 0x80:
+					result += char(((b1 & 0x0F) << 12) | ((b2 & 0x3F) << 6) | (b3 & 0x3F))
+				else:
+					result += char(b1) + char(b2) + char(b3)
+			else:
+				result += char(b1)
+		elif (b1 & 0xF8) == 0xF0:
+			if idx + 2 < total:
+				var b2 = bytes[idx]
+				var b3 = bytes[idx+1]
+				var b4 = bytes[idx+2]
+				idx += 3
+				if (b2 & 0xC0) == 0x80 and (b3 & 0xC0) == 0x80 and (b4 & 0xC0) == 0x80:
+					var codepoint = ((b1 & 0x07) << 18) | ((b2 & 0x3F) << 12) | ((b3 & 0x3F) << 6) | (b4 & 0x3F)
+					result += char(codepoint)
+				else:
+					result += char(b1) + char(b2) + char(b3) + char(b4)
+			else:
+				result += char(b1)
+		else:
+			result += char(b1)
+	return result
 
 func _on_push_pressed():
 	var branch_idx = branch_select.get_selected_id()
@@ -720,9 +760,10 @@ func _on_discard_pressed():
 		_print_to_console(T("err_no_file"))
 		return
 		
-	var item_text = status_list.get_item_text(items[0])
-	if item_text.length() <= 3: return
-	var file_path = item_text.substr(3).strip_edges()
+	var item_text = status_list.get_item_text(items[0]).strip_edges()
+	var first_space = item_text.find(" ")
+	if first_space == -1: return
+	var file_path = item_text.substr(first_space + 1).strip_edges()
 	
 	if file_path.is_empty(): return
 	
@@ -732,15 +773,28 @@ func _on_discard_pressed():
 	_update_status_list()
 
 func _on_status_list_item_activated(index: int):
-	var item_text = status_list.get_item_text(index)
-	if item_text.length() <= 3: return
-	var file_path = item_text.substr(3).strip_edges()
+	var item_text = status_list.get_item_text(index).strip_edges()
+	var first_space = item_text.find(" ")
+	if first_space == -1: return
+	var file_path = item_text.substr(first_space + 1).strip_edges()
 	if file_path.is_empty(): return
 	
 	var output = []
-	OS.execute("git", ["diff", file_path], output, true, true)
-	if output.size() > 0 and not output[0].strip_edges().is_empty():
-		var diff_text_fixed = _fix_utf8(output[0])
+	OS.execute("git", ["diff", "--", file_path], output, true, true)
+	var diff_content = ""
+	if output.size() > 0:
+		diff_content = output[0]
+		
+	# Fallback para arquivos novos/untracked (como melhorias.txt)
+	if diff_content.strip_edges().is_empty():
+		var fallback_output = []
+		var dev_null = "NUL" if OS.get_name() == "Windows" else "/dev/null"
+		OS.execute("git", ["diff", "--no-index", "--", dev_null, file_path], fallback_output, true, true)
+		if fallback_output.size() > 0:
+			diff_content = fallback_output[0]
+			
+	if not diff_content.strip_edges().is_empty():
+		var diff_text_fixed = _fix_utf8(diff_content)
 		var bbcode = ""
 		var lines = diff_text_fixed.split("\n")
 		for line in lines:
